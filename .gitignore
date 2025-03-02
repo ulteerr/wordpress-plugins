@@ -1,0 +1,12 @@
+/vendor
+.env
+
+/_docker/redis
+/_docker/mysql
+
+composer.lock
+
+/redis/data
+wp-content/uploads
+
+robots.txt
