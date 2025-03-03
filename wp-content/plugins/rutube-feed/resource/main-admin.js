@@ -1,6 +1,6 @@
-import { toggleDisplay } from "./js/utils/toggleDisplay";
-import { hidePreloader } from "./js/utils/hidePreloader";
-import { handleError } from "./js/utils/handleError";
+import { toggleDisplay } from "./ts/utils/toggleDisplay";
+import { hidePreloader } from "./ts/utils/hidePreloader";
+import { handleError } from "./ts/utils/handleError";
 
 document.addEventListener("DOMContentLoaded", function () {
 	let page = 1;

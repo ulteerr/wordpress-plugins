@@ -320,6 +320,47 @@ class RutubeMetaBoxRenderer
 		.play-button:hover {
 			background: rgba(0, 0, 0, 0.9);
 		}
+		
+		.preloader {
+			width: 100%;
+			height: 100%;
+			background: url('https://i.gifer.com/ZZ5H.gif') center center no-repeat;
+			background-size: 50px 50px;
+			position: absolute;
+			top: 0;
+			left: 0;
+			z-index: 2;
+		}
+		.video-thumbnail {
+			position: relative;
+			display: inline-block;
+			width: 100%;
+			height: auto;
+			aspect-ratio: 16 / 9;
+		}
+
+
+		.lazy-thumbnail {
+			display: none;
+			width: 100%;
+			height: auto;
+		}
+		
+		@media (max-width: 1200px) {
+			.rutube-video-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
+		}
+
+		@media (max-width: 768px) {
+			.rutube-video-grid {
+				grid-template-columns: repeat(1, 1fr);
+			}
+
+			#rutube-loading-items button {
+				width: 100%;
+			}
+		}
     ";
 	}
 }
