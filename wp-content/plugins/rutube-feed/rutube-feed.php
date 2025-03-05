@@ -114,56 +114,18 @@ class RutubeFeed
 			$post_id = ($screen->base === 'post') ? get_the_ID() : 0;
 
 			$plugin_url = plugin_dir_url(__FILE__) . 'resource/';
-			$codemirror_url = $plugin_url . 'codemirror-5.65.18/';
-			$js_beautify_url = $plugin_url . 'js-beautify-1.14.0/';
-
-			// Подключаем стили CodeMirror
-			wp_enqueue_style('codemirror-css', $codemirror_url . 'lib/codemirror.css');
-			wp_enqueue_style('codemirror-theme', $codemirror_url . 'theme/dracula.css');
-
-			// Подключаем основной CodeMirror
-			wp_enqueue_script('codemirror-js', $codemirror_url . 'lib/codemirror.js', [], null, true);
-
-			// Подключаем модули подсветки
-			$codemirror_modes = [
-				'htmlmixed' => 'mode/htmlmixed/htmlmixed.js',
-				'css' => 'mode/css/css.js',
-				'javascript' => 'mode/javascript/javascript.js',
-				'xml' => 'mode/xml/xml.js',
-			];
-			foreach ($codemirror_modes as $handle => $path) {
-				wp_enqueue_script("codemirror-{$handle}", $codemirror_url . $path, ['codemirror-js'], null, true);
-			}
 
 
-			// Дополнительные модули
-			$codemirror_addons = [
-				'active-line' => 'addon/selection/active-line.js',
-				'matchbrackets' => 'addon/edit/matchbrackets.js',
-				'autoclose' => 'addon/edit/closebrackets.js',
-				'comment' => 'addon/comment/comment.js',
-			];
-			foreach ($codemirror_addons as $handle => $path) {
-				wp_enqueue_script("codemirror-{$handle}", $codemirror_url . $path, ['codemirror-js'], null, true);
-			}
-
-
-			// Подключаем горячие клавиши
-			wp_enqueue_script('codemirror-keymap', $codemirror_url . 'keymap/sublime.js', ['codemirror-js'], null, true);
-
-			// Подключаем js-beautify
-			$js_beautify = [
-				'html' => 'beautify-html.min.js',
-				'css' => 'beautify-css.min.js',
-			];
-			foreach ($js_beautify as $handle => $path) {
-				wp_enqueue_script("js-beautify-{$handle}", $js_beautify_url . $path, ['codemirror-js'], '1.14.0', true);
-			}
-
+			// Отключаем jQuery для этой страницы
+			wp_deregister_script('jquery');
+			wp_dequeue_script('jquery');
 
 			// Подключаем стили и скрипты админки
 			wp_enqueue_style('rutube-admin-css', $plugin_url . 'main-admin.css', [], null);
 			wp_enqueue_script('rutube-admin-js', $plugin_url . 'dist/main-admin.js', [], null, true);
+
+
+
 
 
 			wp_localize_script('rutube-admin-js', 'rutubeAdminParams', [
@@ -177,7 +139,6 @@ class RutubeFeed
 	}
 	public function save_meta($post_id)
 	{
-
 		if (!isset($_POST['rutube_meta_nonce']) || !wp_verify_nonce($_POST['rutube_meta_nonce'], 'save_rutube_meta')) {
 			return;
 		}

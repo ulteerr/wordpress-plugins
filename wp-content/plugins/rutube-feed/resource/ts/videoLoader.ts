@@ -1,9 +1,9 @@
+import { RutubeAdminParams } from "./interface/RutubeAdminParams.interface";
 import { hidePreloader, handleError } from "./utils";
-
-declare const rutubeAdminParams: { ajax_url: string; post_id: string };
 
 export async function loadVideos(
   pageNumber: number,
+  rutubeAdminParams: RutubeAdminParams,
   videoBlock: HTMLElement | null,
   loadingItems: HTMLElement | null,
   channel: string | undefined,
@@ -11,7 +11,6 @@ export async function loadVideos(
   append: boolean = false
 ): Promise<void> {
   if (!videoBlock || !loadingItems) return;
-
   const formData = new FormData();
   formData.append("action", "load_admin_videos");
   formData.append("post_id", rutubeAdminParams.post_id);
@@ -41,6 +40,7 @@ export async function loadVideos(
       });
 
       showLoadMoreButton(
+        rutubeAdminParams,
         data.data.has_more,
         data.data.count,
         pageNumber,
@@ -56,6 +56,7 @@ export async function loadVideos(
 }
 
 function showLoadMoreButton(
+  rutubeAdminParams: RutubeAdminParams,
   hasMore: boolean,
   count: number,
   page: number,
@@ -71,7 +72,15 @@ function showLoadMoreButton(
     nextButton.classList.add("next-page");
     nextButton.addEventListener("click", (e) => {
       e.preventDefault();
-      loadVideos(page + 1, videoBlock, loadingItems, channel, limit, true);
+      loadVideos(
+        page + 1,
+        rutubeAdminParams,
+        videoBlock,
+        loadingItems,
+        channel,
+        limit,
+        true
+      );
     });
     loadingItems.appendChild(nextButton);
   }

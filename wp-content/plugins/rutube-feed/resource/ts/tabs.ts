@@ -1,3 +1,5 @@
+import { EditorView } from "codemirror";
+
 export function setupTabs(): void {
   const tabs =
     document.querySelectorAll<HTMLAnchorElement>(".rutube-tabs-nav a");
@@ -15,6 +17,19 @@ export function setupTabs(): void {
         this.getAttribute("href")!
       );
       activeTabContent?.classList.add("active");
+
+      const textareas = activeTabContent?.querySelectorAll(".editor-template");
+      if (textareas) {
+        textareas.forEach((textarea) => {
+          if (textarea && (textarea as any)._codeMirrorInstance) {
+            setTimeout(() => {
+              const editor = (textarea as any)
+                ._codeMirrorInstance as EditorView;
+              editor.requestMeasure();
+            }, 50);
+          }
+        });
+      }
     });
   });
 }

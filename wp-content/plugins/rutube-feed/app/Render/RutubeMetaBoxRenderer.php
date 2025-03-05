@@ -144,7 +144,7 @@ class RutubeMetaBoxRenderer
 					<li><code>H:i:s</code> — часы:минуты:секунды (21:21:19)</li>
 				</ul>
  				</p>";
-				$this->render_editor($template_html, $this->template_html_key, 'htmlmixed', $buttons, $description);
+				$this->render_editor($template_html, $this->template_html_key, 'html', $buttons, $description);
 				?>
 				</form>
 			</div>

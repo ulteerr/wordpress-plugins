@@ -3,6 +3,9 @@ import { setupModal } from "./ts/modal";
 import { setupTabs } from "./ts/tabs";
 import { setupEditor } from "./ts/editor";
 import { setupCacheClear } from "./ts/cache";
+import { RutubeAdminParams } from "./ts/interface/RutubeAdminParams.interface";
+
+declare const rutubeAdminParams: RutubeAdminParams;
 
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("rutube-video-container");
@@ -14,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const loadingItems = document.getElementById("rutube-loading-items");
 
   if (videoBlock && loadingItems) {
-    loadVideos(1, videoBlock, loadingItems, channel, limit);
+    loadVideos(1, rutubeAdminParams, videoBlock, loadingItems, channel, limit);
   }
 
   setupModal();
@@ -24,5 +27,5 @@ document.addEventListener("DOMContentLoaded", () => {
       setupEditor(textarea);
     }
   });
-  setupCacheClear();
+  if (channel) setupCacheClear(rutubeAdminParams, channel);
 });
