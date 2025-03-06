@@ -93,15 +93,25 @@ class RutubeMetaBoxRenderer
 		</div>
 	<?php
 	}
-	public function render_video_contaniner_and_modal($channel_id, $video_limit, $html = '')
+	public function render_video_contaniner_and_modal($channel_id, $video_limit, $render = [])
 	{
 	?>
 		<div class="block">
 			<div id="rutube-video-container" data-channel="<?php echo esc_attr($channel_id); ?>"
 				data-limit="<?php echo esc_attr($video_limit); ?>" data-page="1">
-				<div class="rutube-video-grid"><?php echo $html ?></div>
+				<div class="rutube-video-grid">
+					<?php if (!empty($render['render_videos_html'])) {
+						echo $render['render_videos_html'];
+					}
+					?>
+				</div>
 			</div>
-			<div id="rutube-loading-items"></div>
+
+			<div id="rutube-loading-items">
+				<?php if (!empty($render['loading_html'])) {
+					echo $render['loading_html'];
+				} ?>
+			</div>
 		</div>
 		<div id="rutube-modal" class="rutube-modal">
 			<div class="modal-content">
@@ -362,5 +372,10 @@ class RutubeMetaBoxRenderer
 			}
 		}
     ";
+	}
+
+	public function get_default_template_loading()
+	{
+		return "<button class=\"next-page\">Показать ещё</button>";
 	}
 }

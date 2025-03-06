@@ -4,21 +4,18 @@ namespace App;
 
 require_once dirname(__DIR__) . '/autoload-class.php';
 
-use App\Render\CssRenderer;
 use App\Render\HtmlRenderer;
 use App\Render\RutubeMetaBoxRenderer;
 
 class Video
 {
 	private $htmlRenderer;
-	private $cssRenderer;
 	private $rutubeMetaBoxRenderer;
 
 	public function __construct()
 	{
 		$this->rutubeMetaBoxRenderer = new RutubeMetaBoxRenderer();
 		$this->htmlRenderer = new HtmlRenderer();
-		$this->cssRenderer = new CssRenderer();
 	}
 	public function load_admin_videos()
 	{
@@ -53,8 +50,10 @@ class Video
 		usort($videos, function ($a, $b) {
 			return strtotime($b['date']) - strtotime($a['date']);
 		});
-
-		return $this->render_videos($videos, $post, $page);
+		if ($has_next) {
+			$loading_html = $this->rutubeMetaBoxRenderer->get_default_template_loading();
+		}
+		return ['render_videos_html' => $this->render_videos($videos, $post, $page), 'loading_html' => $loading_html ?? null];
 	}
 
 	private function fetch_videos($channel_id, $limit = 20, $page = 1)

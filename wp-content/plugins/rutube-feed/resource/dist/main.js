@@ -1,1 +1,1 @@
-
+import{l as s}from"./assets/videoLoader-DpLRuxkO.js";const e=document.getElementById("rutube-video-container"),l=e==null?void 0:e.querySelector(".rutube-video-grid"),o=e==null?void 0:e.dataset.channel,a=e==null?void 0:e.dataset.limit,t=document.getElementById("rutube-loading-items"),d=t==null?void 0:t.querySelector(".next-page"),c=Number(e==null?void 0:e.dataset.page)||1;d&&d.addEventListener("click",u=>{u.preventDefault(),s(c+1,rutubeParams,l,t,o,a,!0)});

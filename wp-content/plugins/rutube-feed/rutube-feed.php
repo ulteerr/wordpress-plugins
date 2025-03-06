@@ -22,6 +22,7 @@ class RutubeFeed
 {
 	private $rutubeMetaBoxRenderer;
 	private $video;
+	private $post;
 
 
 	public function __construct()
@@ -182,20 +183,44 @@ class RutubeFeed
 			return '<p>Rutube Feed not found.</p>';
 		}
 		$post = get_post($feed_id);
+		$this->post = $post;
+
+		
 		$limit = get_post_meta($post->ID, 'rutube_video_limit', true);;
 
 		add_action('wp_enqueue_scripts',  [$this, 'register_style_action']);
+		add_action('wp_enqueue_scripts',  [$this, 'register_js_action']);
+
 		return  $this->rutubeMetaBoxRenderer->render_video_contaniner_and_modal($channel_id, $limit, $this->video->load_shortcode_videos($post));
 	}
 	public function register_style_action()
 	{
-		$post = get_post();
-		$template = $this->rutubeMetaBoxRenderer->get_template_css($post);
+	
+		$template = $this->rutubeMetaBoxRenderer->get_template_css($this->post);
 
 		$handle = 'rutube-feed-style';
 		wp_register_style($handle, false);
 		wp_enqueue_style($handle);
 		wp_add_inline_style($handle, $template);
+	}
+	public function register_js_action()
+	{
+		
+		$handle = 'rutube-feed-script';
+		$script_url = plugin_dir_url(__FILE__)  . 'resource/dist/main.js';
+
+		wp_enqueue_script($handle, $script_url, [], false, true);
+
+		add_filter('script_loader_tag', function ($tag, $handle, $src) {
+			if ($handle === 'rutube-feed-script') {
+				return '<script type="module" src="' . esc_url($src) . '"></script>';
+			}
+			return $tag;
+		}, 10, 3);
+		wp_localize_script($handle, 'rutubeParams', [
+			'ajax_url' => admin_url('admin-ajax.php'),
+			'post_id' => $this->post->ID,
+		]);
 	}
 }
 

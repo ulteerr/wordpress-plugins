@@ -1,9 +1,11 @@
+import { showLoadMoreButton } from "./actions";
 import { RutubeAdminParams } from "./interface/RutubeAdminParams.interface";
+import { RutubeParams } from "./interface/RutubeParams";
 import { hidePreloader, handleError } from "./utils";
 
 export async function loadVideos(
   pageNumber: number,
-  rutubeAdminParams: RutubeAdminParams,
+  params: RutubeAdminParams | RutubeParams,
   videoBlock: HTMLElement | null,
   loadingItems: HTMLElement | null,
   channel: string | undefined,
@@ -13,13 +15,13 @@ export async function loadVideos(
   if (!videoBlock || !loadingItems) return;
   const formData = new FormData();
   formData.append("action", "load_admin_videos");
-  formData.append("post_id", rutubeAdminParams.post_id);
+  formData.append("post_id", params.post_id);
   formData.append("channel", channel || "");
   formData.append("limit", limit || "");
   formData.append("page", pageNumber.toString());
 
   try {
-    const response = await fetch(rutubeAdminParams.ajax_url, {
+    const response = await fetch(params.ajax_url, {
       method: "POST",
       body: formData,
     });
@@ -40,7 +42,7 @@ export async function loadVideos(
       });
 
       showLoadMoreButton(
-        rutubeAdminParams,
+        params,
         data.data.has_more,
         data.data.count,
         pageNumber,
@@ -52,36 +54,5 @@ export async function loadVideos(
     }
   } catch (error) {
     console.error("Ошибка загрузки видео:", error);
-  }
-}
-
-function showLoadMoreButton(
-  rutubeAdminParams: RutubeAdminParams,
-  hasMore: boolean,
-  count: number,
-  page: number,
-  videoBlock: HTMLElement,
-  loadingItems: HTMLElement,
-  channel?: string,
-  limit?: string
-): void {
-  loadingItems.innerHTML = "";
-  if (hasMore && count) {
-    const nextButton = document.createElement("button");
-    nextButton.textContent = "Показать ещё";
-    nextButton.classList.add("next-page");
-    nextButton.addEventListener("click", (e) => {
-      e.preventDefault();
-      loadVideos(
-        page + 1,
-        rutubeAdminParams,
-        videoBlock,
-        loadingItems,
-        channel,
-        limit,
-        true
-      );
-    });
-    loadingItems.appendChild(nextButton);
   }
 }

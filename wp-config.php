@@ -74,33 +74,34 @@ if (!function_exists('dd')) {
 		header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 		$html = '<style>
-            body { background-color: #181818; color: #ddd; font-family: Arial, sans-serif; }
-            .debug-container {
-                max-width: 90%;
-                margin: 20px auto;
-                background: #222;
-                border-radius: 10px;
-                padding: 15px;
-                box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-            }
-            pre {
-                background-color: #000;
-                border-left: 5px solid #00ff00;
-                color: #fff;
-                padding: 12px;
-                font-size: 14px;
-                overflow: auto;
-                border-radius: 5px;
-                font-family: "Courier New", monospace;
-            }
-        </style>';
+		body { background-color: #181818; color: #ddd; font-family: Arial, sans-serif; }
+		.debug-container {
+			max-width: 90%;
+			margin: 20px auto;
+			background: #222;
+			border-radius: 10px;
+			padding: 15px;
+			box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+		}
+		pre {
+			background-color: #000;
+			border-left: 5px solid #00ff00;
+			color: #fff;
+			padding: 12px;
+			font-size: 14px;
+			overflow: auto;
+			border-radius: 5px;
+			font-family: "Courier New", monospace;
+		}
+	</style>';
 
 		$html .= '<div class="debug-container"><pre>';
 		foreach (func_get_args() as $arg) {
 			ob_start();
 			var_dump($arg);
-			$html .= ob_get_clean() . "\n";
+			$html .= htmlspecialchars(ob_get_clean()) . "\n";
 		}
+
 		$html .= '</pre></div>';
 
 		echo $html;
