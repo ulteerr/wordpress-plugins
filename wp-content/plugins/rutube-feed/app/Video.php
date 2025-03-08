@@ -124,7 +124,7 @@ class Video
 
 	private function render_videos($videos, $post, $page)
 	{
-		$template_html = $this->rutubeMetaBoxRenderer->get_template_html($post);
+		$template_html = $this->rutubeMetaBoxRenderer->get_template_element_html($post);
 		return $this->htmlRenderer->render($template_html, $videos);
 	}
 }

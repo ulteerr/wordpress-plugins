@@ -4,18 +4,19 @@ namespace App\Render;
 
 class RutubeMetaBoxRenderer
 {
-	private $template_html_key = 'rutube_video_template_html';
+	private $template_element_html_key = 'rutube_video_element_template_html';
 	private $template_css_key = 'rutube_video_template_css';
+	private $template_button_html_key = 'rutube_video_button_template_html';
 
 	public function get_post_template_meta($post, $key)
 	{
 		return get_post_meta($post->ID, $key, true);
 	}
 
-	public function get_template_html($post)
+	public function get_template_element_html($post)
 	{
-		$template = $this->get_post_template_meta($post, $this->template_html_key);
-		return !empty($template) ? $template : $this->get_default_template_html();
+		$template = $this->get_post_template_meta($post, $this->template_element_html_key);
+		return !empty($template) ? $template : $this->get_default_template_element_html();
 	}
 
 	public function get_template_css($post)
@@ -24,13 +25,20 @@ class RutubeMetaBoxRenderer
 		return !empty($template) ? $template : $this->get_default_template_css();
 	}
 
+	public function get_template_button_html($post)
+	{
+		$template = $this->get_post_template_meta($post, $this->template_button_html_key);
+		return !empty($template) ? $template : $this->get_default_template_loading();
+	}
+
 	public function render($post)
 	{
 		$channel_id = get_post_meta($post->ID, 'rutube_channel_id', true);
 		$video_limit = get_post_meta($post->ID, 'rutube_video_limit', true);
 		$video_limit = !empty($video_limit) ? $video_limit : 6;
-		$template_html = $this->get_post_template_meta($post, $this->template_html_key);
+		$template_element_html = $this->get_post_template_meta($post, $this->template_element_html_key);
 		$template_css = $this->get_post_template_meta($post, $this->template_css_key);
+		$template_button_html = $this->get_post_template_meta($post, $this->template_button_html_key);
 
 ?>
 		<div class="rutube-tabs">
@@ -46,7 +54,7 @@ class RutubeMetaBoxRenderer
 					<?php
 					$this->render_settings_tab($channel_id, $video_limit);
 					$this->render_videos_tab($channel_id, $video_limit);
-					$this->render_template_tab($template_html, $template_css);
+					$this->render_template_tab($template_element_html, $template_css, $template_button_html);
 					$this->render_management_tab();
 					?>
 					<p class="btn btn-submit">
@@ -125,13 +133,13 @@ class RutubeMetaBoxRenderer
 		</div>
 	<?php
 	}
-	private function render_template_tab($template_html, $template_css)
+	private function render_template_tab($template_element_html, $template_css, $template_button_html)
 	{
 	?>
 
 		<div id="rutube-template" class="tab-content">
 			<div class="block">
-				<h3>HTML Шаблон видео</h3>
+				<h3>HTML Шаблон для одного элемента видео</h3>
 				<?php
 				$buttons = [
 					'{url}' => 'Вставить URL',
@@ -154,7 +162,7 @@ class RutubeMetaBoxRenderer
 					<li><code>H:i:s</code> — часы:минуты:секунды (21:21:19)</li>
 				</ul>
  				</p>";
-				$this->render_editor($template_html, $this->template_html_key, 'html', $buttons, $description);
+				$this->render_editor($template_element_html, $this->template_element_html_key, 'html', $buttons, $description);
 				?>
 				</form>
 			</div>
@@ -162,6 +170,13 @@ class RutubeMetaBoxRenderer
 				<h3>CSS Шаблон видео</h3>
 				<?php
 				$this->render_editor($template_css, $this->template_css_key, 'css');
+				?>
+				</form>
+			</div>
+			<div class="block">
+				<h3>Шаблон видео для кнопки</h3>
+				<?php
+				$this->render_editor($template_button_html, $this->template_button_html_key, 'html');
 				?>
 				</form>
 			</div>
@@ -219,7 +234,7 @@ class RutubeMetaBoxRenderer
 	}
 
 
-	private function get_default_template_html()
+	private function get_default_template_element_html()
 	{
 		return '<div class="rutube-video">
 			<div class="video-thumbnail">

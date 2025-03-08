@@ -114,6 +114,9 @@ class RutubeFeed
 
 			$post_id = ($screen->base === 'post') ? get_the_ID() : 0;
 
+			$post = get_post($post_id);
+			$this->post = $post;
+
 			$plugin_url = plugin_dir_url(__FILE__) . 'resource/';
 
 
@@ -125,7 +128,12 @@ class RutubeFeed
 			wp_enqueue_style('rutube-admin-css', $plugin_url . 'main-admin.css', [], null);
 			wp_enqueue_script('rutube-admin-js', $plugin_url . 'dist/main-admin.js', [], null, true);
 
-
+			add_filter('script_loader_tag', function ($tag, $handle, $src) {
+				if ($handle === 'rutube-admin-js') {
+					return '<script type="module" src="' . esc_url($src) . '"></script>';
+				}
+				return $tag;
+			}, 10, 3);
 
 
 
@@ -166,8 +174,8 @@ class RutubeFeed
 			}
 		}
 
-		if (isset($_POST['rutube_video_template_html'])) {
-			update_post_meta($post_id, 'rutube_video_template_html', wp_unslash($_POST['rutube_video_template_html']));
+		if (isset($_POST['rutube_video_element_template_html'])) {
+			update_post_meta($post_id, 'rutube_video_element_template_html', wp_unslash($_POST['rutube_video_element_template_html']));
 		}
 		if (isset($_POST['rutube_video_template_css'])) {
 			update_post_meta($post_id, 'rutube_video_template_css', wp_unslash($_POST['rutube_video_template_css']));
@@ -185,7 +193,7 @@ class RutubeFeed
 		$post = get_post($feed_id);
 		$this->post = $post;
 
-		
+
 		$limit = get_post_meta($post->ID, 'rutube_video_limit', true);;
 
 		add_action('wp_enqueue_scripts',  [$this, 'register_style_action']);
@@ -195,7 +203,7 @@ class RutubeFeed
 	}
 	public function register_style_action()
 	{
-	
+
 		$template = $this->rutubeMetaBoxRenderer->get_template_css($this->post);
 
 		$handle = 'rutube-feed-style';
@@ -205,7 +213,7 @@ class RutubeFeed
 	}
 	public function register_js_action()
 	{
-		
+
 		$handle = 'rutube-feed-script';
 		$script_url = plugin_dir_url(__FILE__)  . 'resource/dist/main.js';
 
